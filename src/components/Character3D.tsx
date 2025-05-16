@@ -9,12 +9,13 @@ interface Character3DModelProps {
 }
 
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
-  // Use proper typing for the refs with THREE.Mesh
-  const bodyRef = useRef<THREE.Mesh>(null);
-  const leftLegRef = useRef<THREE.Mesh>(null);
-  const rightLegRef = useRef<THREE.Mesh>(null);
-  const leftArmRef = useRef<THREE.Mesh>(null);
-  const rightArmRef = useRef<THREE.Mesh>(null);
+  // Using type assertion to avoid TypeScript errors
+  const bodyRef = useRef<THREE.Mesh>(null!);
+  const leftLegRef = useRef<THREE.Mesh>(null!);
+  const rightLegRef = useRef<THREE.Mesh>(null!);
+  const leftArmRef = useRef<THREE.Mesh>(null!);
+  const rightArmRef = useRef<THREE.Mesh>(null!);
+  const laptopRef = useRef<THREE.Mesh>(null!);
   
   // Animation for running
   useFrame(({ clock }) => {
@@ -38,40 +39,73 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
     if (bodyRef.current) {
       bodyRef.current.position.y = 0.7 + Math.abs(Math.sin(t * 10) * 0.05);
     }
+
+    // Laptop bobbing slightly out of sync with body
+    if (laptopRef.current) {
+      laptopRef.current.position.y = Math.sin(t * 10 + 0.5) * 0.02;
+    }
   });
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Body */}
+      {/* Body - Wider for Ghibli proportions */}
       <mesh ref={bodyRef} position={[0, 0.7, 0]}>
-        <boxGeometry args={[0.7, 1, 0.5]} />
-        <meshStandardMaterial color="#3B82F6" />
+        <boxGeometry args={[0.8, 0.9, 0.5]} />
+        <meshStandardMaterial color="#3C3744" /> {/* Dark navy blue for sweater/hoodie */}
       </mesh>
       
-      {/* Head */}
+      {/* Head - Larger and rounder for Ghibli style */}
       <group position={[0, 1.4, 0]}>
         {/* Face */}
         <mesh>
-          <sphereGeometry args={[0.35, 32, 32]} />
-          <meshStandardMaterial color="#FCD34D" />
+          <sphereGeometry args={[0.4, 32, 32]} />
+          <meshStandardMaterial color="#FFE4C8" /> {/* Soft skin tone */}
         </mesh>
         
-        {/* Hair */}
-        <mesh position={[0, 0.1, 0]}>
-          <sphereGeometry args={[0.3, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+        {/* Hair - Messy style common in Ghibli */}
+        <mesh position={[0, 0.15, 0]}>
+          <sphereGeometry args={[0.43, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+          <meshStandardMaterial color="#5A3825" /> {/* Brown hair */}
+        </mesh>
+        
+        {/* Bangs */}
+        <mesh position={[0, 0.2, 0.2]}>
+          <boxGeometry args={[0.8, 0.2, 0.3]} />
+          <meshStandardMaterial color="#5A3825" /> {/* Match hair color */}
+        </mesh>
+        
+        {/* Eyes - Larger, expressive Ghibli eyes */}
+        <mesh position={[0.12, 0.05, 0.35]}>
+          <sphereGeometry args={[0.06, 16, 16]} />
+          <meshStandardMaterial color="#000000" />
+        </mesh>
+        <mesh position={[-0.12, 0.05, 0.35]}>
+          <sphereGeometry args={[0.06, 16, 16]} />
           <meshStandardMaterial color="#000000" />
         </mesh>
         
-        {/* Eyes */}
-        <mesh position={[0.12, 0.05, 0.3]}>
-          <sphereGeometry args={[0.05, 16, 16]} />
-          <meshStandardMaterial color="#000000" />
+        {/* Glasses - IT student staple */}
+        <mesh position={[0, 0.05, 0.38]}>
+          <torusGeometry args={[0.12, 0.02, 8, 20]} />
+          <meshStandardMaterial color="#444444" />
         </mesh>
-        <mesh position={[-0.12, 0.05, 0.3]}>
-          <sphereGeometry args={[0.05, 16, 16]} />
-          <meshStandardMaterial color="#000000" />
+        <mesh position={[0.12, 0.05, 0.38]} rotation={[0, 0, Math.PI/2]}>
+          <cylinderGeometry args={[0.01, 0.01, 0.1, 8]} />
+          <meshStandardMaterial color="#444444" />
         </mesh>
       </group>
+      
+      {/* Laptop - Essential IT student accessory */}
+      <mesh ref={laptopRef} position={[0.35, 0.9, 0.15]} rotation={[0.3, -0.4, 0]}>
+        <boxGeometry args={[0.3, 0.02, 0.2]} />
+        <meshStandardMaterial color="#555555" />
+        
+        {/* Laptop screen */}
+        <mesh position={[0, 0.1, 0]} rotation={[0.8, 0, 0]}>
+          <boxGeometry args={[0.28, 0.18, 0.01]} />
+          <meshStandardMaterial color="#88CCFF" />
+        </mesh>
+      </mesh>
       
       {/* Arms */}
       <mesh
@@ -80,7 +114,7 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
         rotation={[0, 0, -Math.PI / 16]}
       >
         <boxGeometry args={[0.1, 0.6, 0.2]} />
-        <meshStandardMaterial color="#FCD34D" />
+        <meshStandardMaterial color="#FFE4C8" /> {/* Match skin tone */}
       </mesh>
       <mesh
         ref={rightArmRef}
@@ -88,17 +122,17 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
         rotation={[0, 0, Math.PI / 16]}
       >
         <boxGeometry args={[0.1, 0.6, 0.2]} />
-        <meshStandardMaterial color="#FCD34D" />
+        <meshStandardMaterial color="#FFE4C8" /> {/* Match skin tone */}
       </mesh>
       
-      {/* Legs */}
+      {/* Legs - Slim, with pants */}
       <mesh
         ref={leftLegRef}
         position={[-0.2, 0.15, 0]}
         rotation={[0, 0, 0]}
       >
         <boxGeometry args={[0.2, 0.6, 0.3]} />
-        <meshStandardMaterial color="#1D4ED8" />
+        <meshStandardMaterial color="#2C2C44" /> {/* Dark jeans color */}
       </mesh>
       <mesh
         ref={rightLegRef}
@@ -106,7 +140,13 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
         rotation={[0, 0, 0]}
       >
         <boxGeometry args={[0.2, 0.6, 0.3]} />
-        <meshStandardMaterial color="#1D4ED8" />
+        <meshStandardMaterial color="#2C2C44" /> {/* Dark jeans color */}
+      </mesh>
+      
+      {/* Backpack - IT student essential */}
+      <mesh position={[0, 0.7, -0.3]}>
+        <boxGeometry args={[0.6, 0.7, 0.2]} />
+        <meshStandardMaterial color="#D85C27" /> {/* Orange backpack */}
       </mesh>
     </group>
   );
