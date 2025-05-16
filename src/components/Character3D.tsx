@@ -9,13 +9,13 @@ interface Character3DModelProps {
 }
 
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
-  // Using generic type for refs with any to fix TypeScript errors
-  const bodyRef = useRef<THREE.Object3D>(null);
-  const leftLegRef = useRef<THREE.Object3D>(null);
-  const rightLegRef = useRef<THREE.Object3D>(null);
-  const leftArmRef = useRef<THREE.Object3D>(null);
-  const rightArmRef = useRef<THREE.Object3D>(null);
-  const laptopRef = useRef<THREE.Object3D>(null);
+  // Use THREE.Group or THREE.Mesh explicitly based on what we're referencing
+  const bodyRef = useRef<THREE.Mesh>(null);
+  const leftLegRef = useRef<THREE.Mesh>(null);
+  const rightLegRef = useRef<THREE.Mesh>(null);
+  const leftArmRef = useRef<THREE.Mesh>(null);
+  const rightArmRef = useRef<THREE.Mesh>(null);
+  const laptopRef = useRef<THREE.Mesh>(null);
   
   // Animation for running
   useFrame(({ clock }) => {
@@ -108,7 +108,7 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
       </mesh>
       
       {/* Arms */}
-      <mesh
+      <mesh 
         ref={leftArmRef}
         position={[-0.45, 0.7, 0]}
         rotation={[0, 0, -Math.PI / 16]}
