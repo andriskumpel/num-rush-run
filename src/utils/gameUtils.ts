@@ -17,7 +17,7 @@ export const INITIAL_GAME_STATE: GameState = {
   combo: 0,
   lives: 3,
   speed: 1,
-  lane: 1, // 0, 1, 2 for left, center, right
+  lane: 1, // kept for backward compatibility
   isRunning: false,
   currentProblem: null,
   showProblem: false
@@ -40,11 +40,10 @@ export const calculatePoints = (combo: number): number => {
 };
 
 export const checkAnswer = (
-  selectedLane: number,
+  selectedAnswer: number,
   problem: MathProblem,
   state: GameState
 ): { isCorrect: boolean; newState: GameState } => {
-  const selectedAnswer = problem.options[selectedLane];
   const isCorrect = selectedAnswer === problem.correctAnswer;
   
   let newState = { ...state };

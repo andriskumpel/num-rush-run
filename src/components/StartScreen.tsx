@@ -31,7 +31,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
             </div>
           </div>
         </div>
-        <p className="text-xl text-white mb-8">Resolva problemas matemáticos enquanto corre!</p>
+        <p className="text-xl text-white mb-8">Resolva problemas matemáticos enquanto corre e pula!</p>
         
         <div className="space-y-4">
           <div className="bg-gradient-to-b from-indigo-900/80 to-purple-900/80 p-6 rounded-lg max-w-md mx-auto border border-indigo-400">
@@ -43,7 +43,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
               </li>
               <li className="flex items-center">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-500 mr-2 text-white">2</span> 
-                Mova-se para a pista com a resposta correta
+                Pule para pegar a resposta correta
               </li>
               <li className="flex items-center">
                 <span className="flex items-center justify-center w-6 h-6 rounded-full bg-green-500 mr-2 text-white">3</span> 

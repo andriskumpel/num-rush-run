@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Character from './Character';
 import MathProblem from './MathProblem';
 import GameOverScreen from './GameOverScreen';
-import { INITIAL_GAME_STATE, GameState, checkAnswer, generateNewProblem, getLanePosition } from '../utils/gameUtils';
+import { INITIAL_GAME_STATE, GameState, checkAnswer, generateNewProblem } from '../utils/gameUtils';
 
 interface GameScreenProps {
   onReturnHome: () => void;
@@ -15,9 +16,10 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
     currentProblem: generateNewProblem(0)
   });
 
-  const [laneStates, setLaneStates] = useState<('neutral' | 'correct' | 'wrong')[]>([
-    'neutral', 'neutral', 'neutral'
-  ]);
+  const [isJumping, setIsJumping] = useState(false);
+  const [jumpHeight, setJumpHeight] = useState(0);
+  const [targetHeight, setTargetHeight] = useState(0);
+  const jumpTimeoutRef = useRef<number | null>(null);
   
   const [comboDisplay, setComboDisplay] = useState<{ show: boolean; value: number; position: number }>({
     show: false,
@@ -26,25 +28,102 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
   });
 
   const [isGameOver, setIsGameOver] = useState(false);
+  const [answerOptions, setAnswerOptions] = useState<{value: number, height: number}[]>([]);
 
-  const handleMoveLane = useCallback((newLane: number) => {
-    if (newLane >= 0 && newLane <= 2 && gameState.isRunning && !isGameOver) {
-      setGameState(prevState => ({ ...prevState, lane: newLane }));
+  // Setup answer options positions
+  useEffect(() => {
+    if (gameState.currentProblem) {
+      const newOptions = gameState.currentProblem.options.map((option, index) => ({
+        value: option,
+        height: (index + 1) * 100
+      }));
+      setAnswerOptions(newOptions);
     }
-  }, [gameState.isRunning, isGameOver]);
+  }, [gameState.currentProblem]);
+
+  const handleJump = useCallback((height: number) => {
+    if (!isJumping && gameState.isRunning && !isGameOver) {
+      setIsJumping(true);
+      setTargetHeight(height);
+      
+      // Jump animation
+      let jumpFrame = 0;
+      const totalFrames = 20;
+      const jumpInterval = setInterval(() => {
+        jumpFrame++;
+        if (jumpFrame <= totalFrames / 2) {
+          // Going up
+          setJumpHeight(height * (jumpFrame / (totalFrames / 2)));
+        } else {
+          // Coming down
+          setJumpHeight(height * (1 - (jumpFrame - totalFrames / 2) / (totalFrames / 2)));
+        }
+        
+        // Check for collision with answer options
+        if (jumpFrame === totalFrames / 2) {
+          const targetOption = answerOptions.find(option => 
+            Math.abs(option.height - height) < 30
+          );
+          
+          if (targetOption) {
+            // Check if answer is correct
+            const { isCorrect, newState } = checkAnswer(
+              targetOption.value,
+              gameState.currentProblem!,
+              gameState
+            );
+            
+            setGameState(newState);
+            
+            if (isCorrect) {
+              setComboDisplay({
+                show: true,
+                value: newState.combo,
+                position: 50
+              });
+              
+              // Reset combo display
+              setTimeout(() => {
+                setComboDisplay(prev => ({ ...prev, show: false }));
+              }, 1000);
+            }
+            
+            // Check for game over
+            if (newState.lives <= 0) {
+              setIsGameOver(true);
+              return;
+            }
+          }
+        }
+        
+        if (jumpFrame >= totalFrames) {
+          clearInterval(jumpInterval);
+          setIsJumping(false);
+          setJumpHeight(0);
+        }
+      }, 25);
+      
+      return () => {
+        clearInterval(jumpInterval);
+      };
+    }
+  }, [answerOptions, gameState, isGameOver, isJumping]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowLeft':
-        handleMoveLane(Math.max(0, gameState.lane - 1));
-        break;
-      case 'ArrowRight':
-        handleMoveLane(Math.min(2, gameState.lane + 1));
-        break;
-      default:
-        break;
+    if (e.code === 'Space' || e.code === 'ArrowUp') {
+      e.preventDefault();
+      // Small jump
+      handleJump(100);
+    } else if (e.code === 'ArrowDown') {
+      e.preventDefault();
+      // Medium jump
+      handleJump(200);
+    } else if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+      e.preventDefault();
+      // Large jump
+      handleJump(300);
     }
-  }, [gameState.lane, handleMoveLane]);
+  }, [handleJump]);
 
   // Set up key listeners
   useEffect(() => {
@@ -59,60 +138,25 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
     if (!gameState.isRunning || isGameOver) return;
     
     const problemInterval = setInterval(() => {
-      if (gameState.currentProblem) {
-        // Check answer based on current lane
-        const { isCorrect, newState } = checkAnswer(gameState.lane, gameState.currentProblem, gameState);
-        
-        setGameState(newState);
-        
-        // Visual feedback for correct/wrong answer
-        const newLaneStates = [...laneStates];
-        newLaneStates[gameState.lane] = isCorrect ? 'correct' : 'wrong';
-        setLaneStates(newLaneStates);
-        
-        if (isCorrect) {
-          setComboDisplay({
-            show: true,
-            value: newState.combo,
-            position: getLanePosition(gameState.lane)
-          });
-          
-          // Reset combo display
-          setTimeout(() => {
-            setComboDisplay(prev => ({ ...prev, show: false }));
-          }, 1000);
-        }
-        
-        // Reset lane states after feedback
-        setTimeout(() => {
-          setLaneStates(['neutral', 'neutral', 'neutral']);
-        }, 500);
-        
-        // Check for game over
-        if (newState.lives <= 0) {
-          setIsGameOver(true);
-          return;
-        }
-        
-        // Hide problem temporarily
-        setGameState(prev => ({ ...prev, showProblem: false }));
-        
-        // Generate new problem after a delay
-        setTimeout(() => {
-          const nextProblem = generateNewProblem(newState.score);
-          setGameState(prev => ({
-            ...prev,
-            currentProblem: nextProblem,
-            showProblem: true
-          }));
-        }, 1000);
-      }
-    }, 3000 / gameState.speed); // Problem interval decreases as speed increases
+      // Hide problem temporarily
+      setGameState(prev => ({ ...prev, showProblem: false }));
+      
+      // Generate new problem after a delay
+      setTimeout(() => {
+        const nextProblem = generateNewProblem(gameState.score);
+        setGameState(prev => ({
+          ...prev,
+          currentProblem: nextProblem,
+          showProblem: true
+        }));
+      }, 1000);
+      
+    }, 10000 / gameState.speed); // Problem interval decreases as speed increases
     
     return () => {
       clearInterval(problemInterval);
     };
-  }, [gameState.currentProblem, gameState.isRunning, gameState.lane, gameState.speed, isGameOver, laneStates]);
+  }, [gameState.isRunning, gameState.score, gameState.speed, isGameOver]);
 
   // Initial setup - show first problem
   useEffect(() => {
@@ -127,7 +171,8 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
 
   const handleRestart = () => {
     setIsGameOver(false);
-    setLaneStates(['neutral', 'neutral', 'neutral']);
+    setIsJumping(false);
+    setJumpHeight(0);
     setComboDisplay({ show: false, value: 0, position: 0 });
     setGameState({
       ...INITIAL_GAME_STATE,
@@ -136,15 +181,11 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
     });
   };
 
-  const handleTouchLane = (laneIndex: number) => {
-    handleMoveLane(laneIndex);
+  const handleTouchJump = (height: number) => {
+    handleJump(height);
   };
 
-  const laneClass = (index: number, state: 'neutral' | 'correct' | 'wrong') => {
-    return `lane ${state === 'correct' ? 'correct' : state === 'wrong' ? 'wrong' : ''}`;
-  };
-
-  // Add animated background stars
+  // Add animated background with ground
   useEffect(() => {
     const starsContainer = document.querySelector('.stars');
     if (starsContainer) {
@@ -176,6 +217,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
     <div className="game-container">
       {/* Animated background */}
       <div className="stars"></div>
+      <div className="scrolling-ground"></div>
       
       {/* Game HUD */}
       <div className="absolute top-0 left-0 right-0 flex justify-between p-4 z-40 bg-gradient-to-b from-black/80 to-transparent">
@@ -191,15 +233,17 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
         </div>
       </div>
       
-      {/* Game area */}
-      <div className="relative w-full h-full flex overflow-hidden">
-        {/* Lanes */}
-        <div className={laneClass(0, laneStates[0])} style={{ width: '33.33%' }} onClick={() => handleTouchLane(0)}></div>
-        <div className={laneClass(1, laneStates[1])} style={{ width: '33.33%' }} onClick={() => handleTouchLane(1)}></div>
-        <div className={laneClass(2, laneStates[2])} style={{ width: '33.33%' }} onClick={() => handleTouchLane(2)}></div>
+      {/* Game area with running path */}
+      <div className="relative w-full h-full flex flex-col overflow-hidden">
+        {/* Running path */}
+        <div className="running-path"></div>
         
         {/* Character */}
-        <Character lane={gameState.lane} isRunning={gameState.isRunning} />
+        <Character 
+          isRunning={gameState.isRunning} 
+          isJumping={isJumping} 
+          jumpHeight={jumpHeight} 
+        />
         
         {/* Math Problem */}
         {gameState.currentProblem && (
@@ -208,6 +252,28 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
             show={gameState.showProblem}
           />
         )}
+        
+        {/* Jump controls for mobile */}
+        <div className="jump-controls absolute bottom-4 right-4 z-40 flex flex-col gap-2">
+          <button 
+            className="p-4 bg-indigo-500 rounded-full opacity-70 text-white"
+            onClick={() => handleTouchJump(300)}
+          >
+            Alto
+          </button>
+          <button 
+            className="p-4 bg-indigo-500 rounded-full opacity-70 text-white"
+            onClick={() => handleTouchJump(200)}
+          >
+            Médio
+          </button>
+          <button 
+            className="p-4 bg-indigo-500 rounded-full opacity-70 text-white"
+            onClick={() => handleTouchJump(100)}
+          >
+            Baixo
+          </button>
+        </div>
         
         {/* Combo display */}
         {comboDisplay.show && (
@@ -228,6 +294,11 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
           onHome={onReturnHome}
         />
       )}
+      
+      {/* Jump instructions */}
+      <div className="absolute bottom-2 left-2 text-white bg-black bg-opacity-50 rounded-full px-3 py-1 text-xs">
+        Use Espaço/↑ (Jump Baixo), ↓ (Jump Médio) ou Shift (Jump Alto)
+      </div>
     </div>
   );
 };

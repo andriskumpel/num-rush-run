@@ -101,6 +101,11 @@ export default {
 					'50%': { transform: 'translateY(-5px)' },
 					'100%': { transform: 'translateY(0px)' }
 				},
+				'character-jump': {
+					'0%': { bottom: '24px' },
+					'50%': { bottom: '100px' },
+					'100%': { bottom: '24px' }
+				},
 				'slide-in': {
 					'0%': { transform: 'translateX(100%)' },
 					'100%': { transform: 'translateX(0)' }
@@ -120,17 +125,28 @@ export default {
 				'bounce-slow': {
 					'0%, 100%': { transform: 'translateY(0)' },
 					'50%': { transform: 'translateY(-10px)' }
+				},
+				'move-left': {
+					'0%': { right: '-100px' },
+					'100%': { right: 'calc(100% + 100px)' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'character-run': 'character-run 0.6s infinite',
+				'character-jump': 'character-jump 0.8s ease-out',
 				'slide-in': 'slide-in 0.5s ease-out',
 				'slide-out': 'slide-out 0.5s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
 				'scale-in': 'scale-in 0.3s ease-out',
-				'bounce-slow': 'bounce-slow 3s infinite'
+				'bounce-slow': 'bounce-slow 3s infinite',
+				'move-left': 'move-left 8s linear forwards',
+				'float': 'float 2s infinite alternate ease-in-out'
 			}
 		}
 	},
