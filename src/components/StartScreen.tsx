@@ -10,10 +10,13 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-game-background animate-fade-in">
       <div className="text-center mb-10">
-        <h1 className="text-6xl font-bold mb-4 text-white">
-          <span className="text-game-blue">Num</span>
-          <span className="text-game-green">Rush</span>
-        </h1>
+        <div className="flex justify-center mb-6">
+          <img 
+            src="/lovable-uploads/48af6d4a-c50d-4249-92f3-293af03d3aeb.png" 
+            alt="NumRush Logo" 
+            className="w-64 h-auto animate-scale-in"
+          />
+        </div>
         <p className="text-xl text-white mb-8">Resolva problemas matemáticos enquanto corre!</p>
         
         <div className="space-y-4">
