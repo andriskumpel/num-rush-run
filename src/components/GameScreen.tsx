@@ -10,6 +10,7 @@ import JumpControls from './game/JumpControls';
 import ComboDisplay from './game/ComboDisplay';
 import JumpInstructions from './game/JumpInstructions';
 import KeyboardControls from './game/KeyboardControls';
+import { toast } from "sonner";
 
 interface GameScreenProps {
   onReturnHome: () => void;
@@ -25,6 +26,16 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
     handleJump,
     handleRestart
   } = useGameLogic();
+  
+  // Show game instructions when the component mounts
+  React.useEffect(() => {
+    toast.info("Use Space/↑ for low jump, ↓ for medium jump, or Shift for high jump!", {
+      duration: 5000,
+    });
+    
+    // Make sure keyboard focus is set
+    document.body.focus();
+  }, []);
 
   return (
     <div className="game-container">
