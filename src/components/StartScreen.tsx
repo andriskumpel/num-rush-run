@@ -14,10 +14,21 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
       <div className="stars absolute inset-0"></div>
       
       <div className="text-center mb-10 z-10">
-        <div className="flex justify-center mb-6">
-          <div className="w-64 h-auto animate-scale-in relative">
-            <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 mb-2">NumRush</h1>
-            <div className="absolute -inset-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-20 blur-xl rounded-lg"></div>
+        <div className="flex justify-center mb-8">
+          <div className="animate-pulse-slow relative">
+            <h1 className="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 mb-2 tracking-wider">
+              NumRush
+            </h1>
+            {/* Enhanced glow effect */}
+            <div className="absolute -inset-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-30 blur-xl rounded-lg"></div>
+            {/* Additional subtle animations */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-700 opacity-20 blur-md rounded-lg animate-pulse"></div>
+            {/* Sparkle effect around the title */}
+            <div className="absolute -inset-4 flex justify-center items-center">
+              <div className="w-2 h-2 bg-white rounded-full opacity-80 absolute top-0 left-1/4 animate-ping" style={{ animationDuration: '3s' }}></div>
+              <div className="w-2 h-2 bg-white rounded-full opacity-80 absolute top-1/3 right-1/4 animate-ping" style={{ animationDuration: '2s' }}></div>
+              <div className="w-2 h-2 bg-white rounded-full opacity-80 absolute bottom-0 right-1/3 animate-ping" style={{ animationDuration: '4s' }}></div>
+            </div>
           </div>
         </div>
         <p className="text-xl text-white mb-8">Resolva problemas matemáticos enquanto corre!</p>
