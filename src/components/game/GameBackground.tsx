@@ -2,39 +2,37 @@
 import React, { useEffect } from 'react';
 
 const GameBackground: React.FC = () => {
-  // Create stars in the background
+  // Create cloud blocks in the background
   useEffect(() => {
-    const starsContainer = document.querySelector('.stars');
-    if (starsContainer) {
-      for (let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.classList.add('star');
+    const cloudsContainer = document.querySelector('.clouds');
+    if (cloudsContainer) {
+      cloudsContainer.innerHTML = ''; // Clear existing clouds
+      
+      for (let i = 0; i < 10; i++) {
+        const cloud = document.createElement('div');
+        cloud.classList.add('cloud');
         
         // Random position
         const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        star.style.left = `${x}%`;
-        star.style.top = `${y}%`;
+        const y = Math.random() * 40;
+        cloud.style.left = `${x}%`;
+        cloud.style.top = `${y}%`;
         
-        // Random size
-        const size = Math.random() * 3;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
+        // Random speed for parallax effect
+        const speed = 15 + Math.random() * 40;
+        cloud.style.setProperty('--cloud-speed', `${speed}s`);
         
-        // Random animation duration
-        const duration = 3 + Math.random() * 7;
-        star.style.setProperty('--duration', `${duration}s`);
-        
-        starsContainer.appendChild(star);
+        cloudsContainer.appendChild(cloud);
       }
     }
   }, []);
 
   return (
     <>
-      <div className="stars"></div>
+      <div className="clouds"></div>
       <div className="scrolling-ground"></div>
       <div className="running-path"></div>
+      <div className="pixel-mountains"></div>
     </>
   );
 };
