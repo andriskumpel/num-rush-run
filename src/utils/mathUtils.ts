@@ -51,7 +51,7 @@ export const generateMathProblem = (
   
   // Select operation
   const operations: Operation[] = ['addition', 'subtraction', 'multiplication'];
-  const operation = preferredOperation || operations[getRandomInt(0, operations.length - 1)];
+  let operation = preferredOperation || operations[getRandomInt(0, operations.length - 1)];
   
   // Generate numbers for the problem
   let num1: number, num2: number, correctAnswer: number;
