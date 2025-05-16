@@ -1,12 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import StartScreen from '@/components/StartScreen';
+import GameScreen from '@/components/GameScreen';
 
 const Index = () => {
+  const [gameScreen, setGameScreen] = useState<'start' | 'play'>('start');
+
+  const handleStartGame = () => {
+    setGameScreen('play');
+  };
+
+  const handleReturnHome = () => {
+    setGameScreen('start');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="bg-game-background min-h-screen w-screen overflow-hidden">
+      {gameScreen === 'start' ? (
+        <StartScreen onStart={handleStartGame} />
+      ) : (
+        <GameScreen onReturnHome={handleReturnHome} />
+      )}
+      
+      {/* Game instructions - small icon at bottom */}
+      {gameScreen === 'play' && (
+        <div className="absolute bottom-2 left-2 text-white opacity-50 text-xs">
+          Use as setas ← → para mover
+        </div>
+      )}
     </div>
   );
 };
