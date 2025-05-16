@@ -9,7 +9,7 @@ interface Character3DModelProps {
 }
 
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
-  // Using type assertion to avoid TypeScript errors
+  // Using explicit type for refs to fix TypeScript errors
   const bodyRef = useRef<THREE.Mesh>(null!);
   const leftLegRef = useRef<THREE.Mesh>(null!);
   const rightLegRef = useRef<THREE.Mesh>(null!);
