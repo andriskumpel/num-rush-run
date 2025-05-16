@@ -73,7 +73,7 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
         // Check for collision with answer options
         if (jumpFrame === totalFrames / 2) {
           const targetOption = answerOptions.find(option => 
-            Math.abs(option.height - height) < 50 // Increased collision threshold
+            Math.abs(option.height - height) < 70 // Increased collision threshold for better playability
           );
           
           if (targetOption) {

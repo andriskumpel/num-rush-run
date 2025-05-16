@@ -7,21 +7,21 @@ interface JumpControlsProps {
 
 const JumpControls: React.FC<JumpControlsProps> = ({ onJump }) => {
   return (
-    <div className="jump-controls absolute bottom-4 right-4 z-40 flex flex-col gap-2">
+    <div className="jump-controls fixed bottom-4 right-4 z-40 flex flex-col gap-2">
       <button 
-        className="p-4 bg-indigo-500 rounded-full opacity-70 text-white"
+        className="p-4 bg-indigo-600 rounded-full text-white shadow-lg border-2 border-white"
         onClick={() => onJump(300)}
       >
         Alto
       </button>
       <button 
-        className="p-4 bg-indigo-500 rounded-full opacity-70 text-white"
+        className="p-4 bg-indigo-600 rounded-full text-white shadow-lg border-2 border-white"
         onClick={() => onJump(200)}
       >
         Médio
       </button>
       <button 
-        className="p-4 bg-indigo-500 rounded-full opacity-70 text-white"
+        className="p-4 bg-indigo-600 rounded-full text-white shadow-lg border-2 border-white"
         onClick={() => onJump(100)}
       >
         Baixo

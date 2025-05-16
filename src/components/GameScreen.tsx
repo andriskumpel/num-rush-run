@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import Character from './Character';
 import MathProblem from './MathProblem';
 import GameOverScreen from './GameOverScreen';
@@ -17,6 +17,8 @@ interface GameScreenProps {
 }
 
 const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
+  const gameContainerRef = useRef<HTMLDivElement>(null);
+  
   const {
     gameState,
     isJumping,
@@ -28,17 +30,29 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
   } = useGameLogic();
   
   // Show game instructions when the component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     toast.info("Use Space/↑ for low jump, ↓ for medium jump, or Shift for high jump!", {
       duration: 5000,
     });
     
     // Make sure keyboard focus is set
-    document.body.focus();
+    if (gameContainerRef.current) {
+      gameContainerRef.current.focus();
+    }
   }, []);
 
   return (
-    <div className="game-container">
+    <div 
+      className="game-container" 
+      tabIndex={0} 
+      ref={gameContainerRef}
+      onKeyDown={(e) => {
+        // Prevent scrolling with arrow keys
+        if (['ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
+          e.preventDefault();
+        }
+      }}
+    >
       {/* Background elements */}
       <GameBackground />
       
