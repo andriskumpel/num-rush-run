@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -53,6 +52,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    perspective: 1000px;
   }
   
   #root {
@@ -65,11 +65,16 @@
 
 .game-container {
   @apply w-full h-screen flex flex-col items-center justify-center overflow-hidden;
+  perspective: 1000px;
 }
 
 .lane {
   @apply relative h-full border-l-2 border-r-2 border-game-lane-border bg-game-lane;
   transition: all 0.2s ease;
+  transform-style: preserve-3d;
+  transform: rotateX(45deg);
+  height: 120vh;
+  margin-top: -10vh;
 }
 
 .lane.correct {
@@ -81,8 +86,9 @@
 }
 
 .character {
-  @apply absolute bottom-24 w-16 h-16 z-20;
+  @apply absolute bottom-24 z-20;
   transition: left 0.2s ease;
+  transform-style: preserve-3d;
 }
 
 .obstacle {
