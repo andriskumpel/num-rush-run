@@ -22,7 +22,7 @@ const MathProblem: React.FC<MathProblemProps> = ({ problem, show }) => {
               right: '-100px',
               bottom: `${(index + 1) * 100}px`,
               position: 'absolute',
-              animation: `move-left 10s linear forwards, float-${index} 2s infinite alternate ease-in-out`
+              animation: `move-left 8s linear forwards, float-${index} 2s infinite alternate ease-in-out`
             }}
           >
             {option}

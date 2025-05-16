@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { GameState, INITIAL_GAME_STATE, checkAnswer, generateNewProblem } from '../utils/gameUtils';
-import { MathProblem } from '../utils/mathUtils';
+import { toast } from "sonner";
 
 interface GameLogicReturn {
   gameState: GameState;
@@ -34,11 +34,12 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
   const [comboDisplay, setComboDisplay] = useState<{ show: boolean; value: number; position: number }>({
     show: false,
     value: 0,
-    position: 0
+    position: 50
   });
 
   const [isGameOver, setIsGameOver] = useState(false);
   const [answerOptions, setAnswerOptions] = useState<{value: number, height: number}[]>([]);
+  const [lastProblemTime, setLastProblemTime] = useState(Date.now());
 
   // Setup answer options positions
   useEffect(() => {
@@ -58,7 +59,7 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
       
       // Jump animation
       let jumpFrame = 0;
-      const totalFrames = 20;
+      const totalFrames = 30; // Increased for smoother animation
       const jumpInterval = setInterval(() => {
         jumpFrame++;
         if (jumpFrame <= totalFrames / 2) {
@@ -72,7 +73,7 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
         // Check for collision with answer options
         if (jumpFrame === totalFrames / 2) {
           const targetOption = answerOptions.find(option => 
-            Math.abs(option.height - height) < 30
+            Math.abs(option.height - height) < 50 // Increased collision threshold
           );
           
           if (targetOption) {
@@ -92,15 +93,22 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
                 position: 50
               });
               
+              // Feedback for correct answer
+              toast.success(`Correto! +${10 + Math.floor(newState.combo * 5)} pontos`);
+              
               // Reset combo display
               setTimeout(() => {
                 setComboDisplay(prev => ({ ...prev, show: false }));
-              }, 1000);
+              }, 1500);
+            } else {
+              // Feedback for wrong answer
+              toast.error("Incorreto! -1 vida");
             }
             
             // Check for game over
             if (newState.lives <= 0) {
               setIsGameOver(true);
+              toast.error("Fim de jogo!");
               return;
             }
           }
@@ -123,26 +131,33 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
   useEffect(() => {
     if (!gameState.isRunning || isGameOver) return;
     
+    const minProblemInterval = 8000; // At least 8 seconds between problems
+    
     const problemInterval = setInterval(() => {
-      // Hide problem temporarily
-      setGameState(prev => ({ ...prev, showProblem: false }));
+      const now = Date.now();
       
-      // Generate new problem after a delay
-      setTimeout(() => {
-        const nextProblem = generateNewProblem(gameState.score);
-        setGameState(prev => ({
-          ...prev,
-          currentProblem: nextProblem,
-          showProblem: true
-        }));
-      }, 1000);
-      
-    }, 10000 / gameState.speed); // Problem interval decreases as speed increases
+      // Only generate a new problem if enough time has passed
+      if (now - lastProblemTime > minProblemInterval / gameState.speed) {
+        // Hide problem temporarily
+        setGameState(prev => ({ ...prev, showProblem: false }));
+        
+        // Generate new problem after a delay
+        setTimeout(() => {
+          const nextProblem = generateNewProblem(gameState.score);
+          setGameState(prev => ({
+            ...prev,
+            currentProblem: nextProblem,
+            showProblem: true
+          }));
+          setLastProblemTime(now);
+        }, 1000);
+      }
+    }, 2000); // Check more frequently, but only generate problems on the right interval
     
     return () => {
       clearInterval(problemInterval);
     };
-  }, [gameState.isRunning, gameState.score, gameState.speed, isGameOver]);
+  }, [gameState.isRunning, gameState.score, gameState.speed, isGameOver, lastProblemTime]);
 
   // Initial setup - show first problem
   useEffect(() => {
@@ -159,12 +174,14 @@ export const useGameLogic = (onGameOver?: () => void): GameLogicReturn => {
     setIsGameOver(false);
     setIsJumping(false);
     setJumpHeight(0);
-    setComboDisplay({ show: false, value: 0, position: 0 });
+    setComboDisplay({ show: false, value: 0, position: 50 });
+    setLastProblemTime(Date.now());
     setGameState({
       ...INITIAL_GAME_STATE,
       isRunning: true,
       currentProblem: generateNewProblem(0)
     });
+    toast.info("Novo jogo iniciado!");
   };
 
   return {

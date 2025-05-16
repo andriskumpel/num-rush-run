@@ -12,7 +12,7 @@ const ComboDisplay: React.FC<ComboDisplayProps> = ({ show, value, position }) =>
   
   return (
     <div 
-      className="combo-text text-yellow-300"
+      className="combo-text text-yellow-300 text-shadow-lg absolute z-50"
       style={{ left: `${position}%`, transform: 'translateX(-50%)', bottom: '45%' }}
     >
       {value > 1 ? `Combo ${value}x!` : 'Correto!'}
