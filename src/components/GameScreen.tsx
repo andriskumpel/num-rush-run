@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import Character from './Character';
 import MathProblem from './MathProblem';
@@ -145,18 +144,49 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
     return `lane ${state === 'correct' ? 'correct' : state === 'wrong' ? 'wrong' : ''}`;
   };
 
+  // Add animated background stars
+  useEffect(() => {
+    const starsContainer = document.querySelector('.stars');
+    if (starsContainer) {
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        
+        // Random position
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        
+        // Random size
+        const size = Math.random() * 3;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        
+        // Random animation duration
+        const duration = 3 + Math.random() * 7;
+        star.style.setProperty('--duration', `${duration}s`);
+        
+        starsContainer.appendChild(star);
+      }
+    }
+  }, []);
+
   return (
     <div className="game-container">
+      {/* Animated background */}
+      <div className="stars"></div>
+      
       {/* Game HUD */}
-      <div className="absolute top-0 left-0 right-0 flex justify-between p-4 z-40 bg-black bg-opacity-50">
+      <div className="absolute top-0 left-0 right-0 flex justify-between p-4 z-40 bg-gradient-to-b from-black/80 to-transparent">
         <div className="text-white">
           <div className="text-lg">Pontos: <span className="font-bold">{gameState.score}</span></div>
-          <div className="text-sm">Combo: <span className="font-bold text-game-orange">{gameState.combo}x</span></div>
+          <div className="text-sm">Combo: <span className="font-bold text-yellow-300">{gameState.combo}x</span></div>
         </div>
         
         <div className="flex items-center">
           {[...Array(gameState.lives)].map((_, i) => (
-            <div key={i} className="w-6 h-6 bg-game-red rounded-full mx-1"></div>
+            <div key={i} className="w-6 h-6 bg-red-500 rounded-full mx-1 animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -182,7 +212,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
         {/* Combo display */}
         {comboDisplay.show && (
           <div 
-            className="combo-text text-game-green"
+            className="combo-text text-yellow-300"
             style={{ left: `${comboDisplay.position}%`, transform: 'translateX(-50%)', bottom: '45%' }}
           >
             {comboDisplay.value > 1 ? `Combo ${comboDisplay.value}x!` : 'Correto!'}

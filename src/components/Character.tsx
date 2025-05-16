@@ -1,6 +1,5 @@
 
 import React from 'react';
-import Character3D from './Character3D';
 
 interface CharacterProps {
   lane: number;
@@ -14,12 +13,26 @@ const Character: React.FC<CharacterProps> = ({ lane, isRunning }) => {
     <div 
       className={`character ${isRunning ? 'animate-character-run' : ''}`}
       style={{ 
-        left: `calc(${leftPosition} - 3rem)`, 
-        width: '6rem',
-        height: '8rem'
+        left: `calc(${leftPosition} - 2rem)`, 
+        width: '4rem',
+        height: '5rem'
       }}
     >
-      <Character3D isRunning={isRunning} />
+      <div className="character-container">
+        <div className="character-body bg-blue-500 rounded-full flex items-center justify-center">
+          <div className="character-face">
+            <div className="eyes flex justify-center space-x-1">
+              <div className="eye bg-white rounded-full w-2 h-2 flex items-center justify-center">
+                <div className="bg-black rounded-full w-1 h-1"></div>
+              </div>
+              <div className="eye bg-white rounded-full w-2 h-2 flex items-center justify-center">
+                <div className="bg-black rounded-full w-1 h-1"></div>
+              </div>
+            </div>
+            <div className="mouth bg-red-400 rounded-full w-3 h-1 mt-1 mx-auto"></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
