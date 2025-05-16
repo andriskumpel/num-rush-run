@@ -53,7 +53,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
         }
       }}
     >
-      {/* Background elements */}
+      {/* Temple Run Background */}
       <GameBackground />
       
       {/* Game HUD */}
@@ -63,8 +63,17 @@ const GameScreen: React.FC<GameScreenProps> = ({ onReturnHome }) => {
         lives={gameState.lives}
       />
       
-      {/* Game area with running path */}
+      {/* Temple Run Path */}
       <div className="relative w-full h-full flex flex-col overflow-hidden">
+        {/* Add Temple Ruins */}
+        <div className="temple-ruins absolute left-0 w-full z-10" style={{ bottom: '100px' }}>
+          <div className="temple-column absolute left-[5%] h-32 w-8 bg-amber-800"></div>
+          <div className="temple-column absolute left-[15%] h-40 w-8 bg-amber-800"></div>
+          <div className="temple-column absolute left-[45%] h-36 w-8 bg-amber-800"></div>
+          <div className="temple-column absolute left-[65%] h-28 w-8 bg-amber-800"></div>
+          <div className="temple-column absolute left-[80%] h-32 w-8 bg-amber-800"></div>
+        </div>
+        
         {/* Character */}
         <Character 
           isRunning={gameState.isRunning} 

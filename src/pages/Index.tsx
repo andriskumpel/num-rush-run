@@ -14,39 +14,39 @@ const Index = () => {
     setGameScreen('start');
   };
 
-  // Create stars in the background on component mount
+  // Create temple fire particles in the background
   useEffect(() => {
     const starsContainer = document.querySelector('.stars');
     if (starsContainer) {
       // Clear existing stars first
       starsContainer.innerHTML = '';
       
-      for (let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.classList.add('star');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('star');
         
         // Random position
         const x = Math.random() * 100;
         const y = Math.random() * 100;
-        star.style.left = `${x}%`;
-        star.style.top = `${y}%`;
+        particle.style.left = `${x}%`;
+        particle.style.top = `${y}%`;
         
         // Random size
         const size = Math.random() * 3;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
         
         // Random animation duration
         const duration = 3 + Math.random() * 7;
-        star.style.setProperty('--duration', `${duration}s`);
+        particle.style.setProperty('--duration', `${duration}s`);
         
-        starsContainer.appendChild(star);
+        starsContainer.appendChild(particle);
       }
     }
   }, [gameScreen]);
 
   return (
-    <div className="bg-gradient-to-b from-game-background to-purple-900 min-h-screen w-screen overflow-hidden relative">
+    <div className="bg-gradient-to-b from-amber-900 to-amber-800 min-h-screen w-screen overflow-hidden relative">
       <div className="stars"></div>
       
       {gameScreen === 'start' ? (
@@ -57,8 +57,8 @@ const Index = () => {
       
       {/* Game instructions - make more visible */}
       {gameScreen === 'play' && (
-        <div className="absolute bottom-2 right-2 text-white bg-black bg-opacity-70 rounded-full px-3 py-1 text-xs z-40">
-          <span className="font-bold">🎮 Game Controls:</span> Use arrow keys to play
+        <div className="absolute bottom-2 right-2 text-amber-200 bg-amber-900 bg-opacity-70 rounded-full px-3 py-1 text-xs z-40">
+          <span className="font-bold">🏃 Temple Run:</span> Use Space/↑/↓/Shift keys to jump
         </div>
       )}
     </div>

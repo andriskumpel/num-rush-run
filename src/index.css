@@ -49,7 +49,7 @@
   }
 
   body {
-    @apply bg-blue-500 text-foreground;
+    @apply bg-amber-900 text-foreground;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -72,38 +72,55 @@
   line-height: 1;
 }
 
-/* Pixel Art Borders */
-.pixel-border {
+/* Temple Run Styles */
+.temple-block {
   box-shadow: 
     0 4px 0 rgba(0, 0, 0, 0.5),
-    inset -4px 0 0 rgba(255, 255, 255, 0.3),
+    inset -4px 0 0 rgba(255, 255, 255, 0.2),
     inset 4px 0 0 rgba(0, 0, 0, 0.2);
   image-rendering: pixelated;
   border-style: solid;
   border-width: 4px;
-  border-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDoAABSCAABFVgAADqXAAAXb9daH5AAAAAZSURBVHjaYmBgYPgPxAwwMjIyAAAAAP//AwAnTQNFRgLCLQAAAABJRU5ErkJggg==') 1 repeat;
+  border-color: #78350f;
+  border-radius: 4px;
 }
 
-.pixel-heart {
-  clip-path: polygon(50% 0%, 61% 39%, 100% 39%, 68% 63%, 79% 100%, 50% 78%, 21% 100%, 32% 63%, 0% 39%, 39% 39%);
+.idol-gem {
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
 }
 
 .game-container {
   @apply w-full h-screen flex flex-col items-center justify-center overflow-hidden;
 }
 
-.lane {
-  @apply relative h-full;
+.temple-column {
+  background-image: 
+    linear-gradient(0deg, rgba(146, 64, 14, 0.8) 0%, rgba(120, 53, 15, 0.8) 85%, rgba(78, 39, 15, 1) 100%);
+  box-shadow: inset -2px 0 rgba(255, 255, 255, 0.1), inset 2px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
   transition: all 0.2s ease;
-  height: 100vh;
 }
 
-.lane.correct {
-  @apply bg-green-500/20;
+.temple-column::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -4px;
+  right: -4px;
+  height: 12px;
+  background: #78350f;
+  border-radius: 2px;
 }
 
-.lane.wrong {
-  @apply bg-red-500/20;
+.temple-column::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: -6px;
+  right: -6px;
+  height: 8px;
+  background: #78350f;
+  border-radius: 2px;
 }
 
 .character {
@@ -124,78 +141,87 @@
 
 .character-body {
   @apply relative;
-  animation: pixel-bounce 0.6s infinite alternate steps(2);
+  animation: temple-run 0.6s infinite alternate steps(2);
 }
 
 .rotate-character {
-  animation: pixel-rotate 0.5s steps(4) forwards;
+  animation: temple-flip 0.5s steps(4) forwards;
 }
 
-@keyframes pixel-rotate {
+@keyframes temple-flip {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-@keyframes pixel-bounce {
+@keyframes temple-run {
   0% {
-    transform: translateY(0);
+    transform: translateY(0) scaleY(1);
   }
   100% {
-    transform: translateY(-2px);
+    transform: translateY(-4px) scaleY(0.95);
   }
 }
 
-.running-path {
+.temple-path {
   @apply absolute bottom-0 w-full h-16;
-  background-color: #8B5CF6;
+  background-color: #92400e;
   background-image: 
     linear-gradient(90deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.3) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.3) 100%),
-    linear-gradient(0deg, #8B5CF6 0%, #8B5CF6 85%, #663db1 85%, #663db1 100%);
+    linear-gradient(0deg, #92400e 0%, #92400e 85%, #78350f 85%, #78350f 100%);
   background-size: 32px 32px;
   z-index: 10;
 }
 
-.scrolling-ground {
-  @apply absolute bottom-0 w-full h-16;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAn0lEQVRYR+2XwQ3AIAhFYQFO0rW6WTdpJ7E/QmI04IeS+MtF4T1RQZ3Z3LyfiwAAAMCfAVR1zMzFe09T6NVcRA4iUkeIFYCq7iLy1LJmxqeI7CnGCoDLQUSuLwAee9eGEylAYPj2BmIAQxlj88BXgHbpr3T/kYLQ+PY6EAvQfw+YArilsDoLu8MkZDQNRHUW9D/ixAirgWiAmYL0mVe+9L0D4AUiJTAhJEP9YAAAAABJRU5ErkJggg==');
-  background-repeat: repeat-x;
-  background-size: 32px 32px;
-  animation: scroll-left-pixel 0.5s steps(4) infinite;
-  z-index: 5;
+.temple-sky {
+  @apply absolute top-0 left-0 right-0 bottom-16;
+  background: linear-gradient(to bottom, #4b1d02 0%, #78350f 100%);
+  z-index: 1;
 }
 
-@keyframes scroll-left-pixel {
-  0% { background-position: 0 0; }
-  100% { background-position: -32px 0; }
-}
-
-.pixel-mountains {
+.temple-mountains {
   @apply absolute bottom-16 w-full;
   height: 64px;
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAgBAMAAABQs2O3AAAAKlBMVEVHcEwdJjMdJjMdJjMdJjMdJjMdJjMdJjMdJjMdJjMdJjMdJjMdJjMdJjPZxt8VAAAADXRSTlMAu0CA7xAg31Bgn88wj76e9gAAAMNJREFUOMtjYBgFhIOAAIb5//8Pwf//Xx4O///fB6T+hwDx/5sD//8XoPifAqFAPBBEH//fCsTzgeL/JUD8f+f//wdA9iogXg/E//8C8XQg/v8fiPOA5kQA5YDyQHYAEB8A0gtA7AAg/v8HSM8HegSo5v9KIL4MxP+B7s4F4vVAvAeIZwPxfyBeC5SbCcTPgfg9EK8B4s1AfACI7wHl9IL4RAtob6EEo9D//ywd//9nlPz/nzXj//+c4f//s+v+/8+y8v//qD9kAACKunzyEJ77UAAAAABJRU5ErkJggg==');
   background-repeat: repeat-x;
   background-size: 64px 64px;
   z-index: 4;
+  filter: sepia(100%) saturate(200%) brightness(50%) hue-rotate(10deg);
 }
 
-.clouds {
-  @apply absolute inset-0 z-0;
+.scrolling-temple-ground {
+  @apply absolute bottom-0 w-full h-16;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAn0lEQVRYR+2XwQ3AIAhFYQFO0rW6WTdpJ7E/QmI04IeS+MtF4T1RQZ3Z3LyfiwAAAMCfAVR1zMzFe09T6NVcRA4iUkeIFYCq7iLy1LJmxqeI7CnGCoDLQUSuLwAee9eGEylAYPj2BmIAQxlj88BXgHbpr3T/kYLQ+PY6EAvQfw+YArilsDoLu8MkZDQNRHUW9D/ixAirgWiAmYL0mVe+9L0D4AUiJTAhJEP9YAAAAABJRU5ErkJggg==');
+  background-repeat: repeat-x;
+  background-size: 32px 32px;
+  animation: scroll-left-temple 0.5s steps(4) infinite;
+  z-index: 5;
+  filter: sepia(100%) saturate(300%) brightness(70%) hue-rotate(20deg);
+}
+
+@keyframes scroll-left-temple {
+  0% { background-position: 0 0; }
+  100% { background-position: -32px 0; }
+}
+
+.temple-torches {
+  @apply absolute inset-0 z-2;
   overflow: hidden;
 }
 
-.cloud {
+.temple-torch {
   @apply absolute;
-  width: 48px;
+  width: 16px;
   height: 24px;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgBAMAAABQs2O3AAAAFVBMVEVHcEz///////////8wMDBvb29VVVVX6qIRAAAABnRSTlMAECAwUICbQJrnAAAAaElEQVQ4y2NgGLqAEQqY4IL//0PAAPsRYABShBfwQwBEUAECcEBBAxQcQQJHsADDALh8AxIAC4AVoQGIIrgAWB4MYIpgACwJA2BFMACWHAGA5cEAZBEcQBShAIgiBgaoohJcYBQMGAAAXmP+okjSY8UAAAAASUVORK5CYII=');
-  background-size: contain;
-  background-repeat: no-repeat;
-  animation: cloud-move var(--cloud-speed) linear infinite;
+  background: radial-gradient(circle at center, #f59e0b 0%, #b45309 70%, transparent 100%);
+  box-shadow: 0 0 15px 5px rgba(245, 158, 11, 0.5);
+  border-radius: 50% 50% 0 0;
+  opacity: 0.7;
+  animation: torch-flicker var(--torch-speed) ease-in-out infinite;
 }
 
-@keyframes cloud-move {
-  0% { transform: translateX(-100px); }
-  100% { transform: translateX(calc(100vw + 100px)); }
+@keyframes torch-flicker {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 0.7; transform: scale(1.1); }
 }
 
 .answer-option {
@@ -205,6 +231,7 @@
   animation-fill-mode: forwards;
   animation-iteration-count: 1;
   z-index: 15;
+  box-shadow: 0 0 10px 2px rgba(245, 158, 11, 0.5);
 }
 
 @keyframes move-left-pixel {
@@ -213,23 +240,24 @@
 }
 
 @keyframes float-0 {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-4px); }
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-4px) rotate(10deg); }
 }
 
 @keyframes float-1 {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-6px); }
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-6px) rotate(-10deg); }
 }
 
 @keyframes float-2 {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-8px) rotate(5deg); }
 }
 
 .combo-text {
   @apply absolute text-2xl font-bold z-30;
   animation: pixel-combo-animation 0.8s steps(4) forwards;
+  color: #f59e0b;
   text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
 }
 
@@ -249,14 +277,14 @@
   }
 }
 
-/* Game background effects */
+/* Temple Run stars for background */
 .stars {
   @apply absolute inset-0 z-0;
 }
 
 .star {
-  @apply absolute rounded-full bg-white;
-  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+  @apply absolute rounded-full bg-amber-100;
+  box-shadow: 0 0 10px 2px rgba(255, 200, 150, 0.8);
   animation: twinkle var(--duration) infinite ease-in-out;
 }
 
@@ -267,4 +295,14 @@
   50% {
     opacity: 1;
   }
+}
+
+/* Temple coin spin animation for answer options */
+.temple-coin {
+  animation: coin-spin 1s infinite linear;
+}
+
+@keyframes coin-spin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
 }
