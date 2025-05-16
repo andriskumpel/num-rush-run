@@ -8,16 +8,15 @@ interface Character3DModelProps {
   isRunning: boolean;
 }
 
-// Define more specific ref types using THREE.Mesh but with any to avoid geometry type issues
-type MeshRefType = React.RefObject<THREE.Mesh>;
-
+// Using any to bypass the type checking issues with THREE.js and React types
+// This is safer than forcing type assertions and will allow the component to work properly
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
-  const bodyRef = useRef<THREE.Mesh>(null) as MeshRefType;
-  const leftLegRef = useRef<THREE.Mesh>(null) as MeshRefType;
-  const rightLegRef = useRef<THREE.Mesh>(null) as MeshRefType;
-  const leftArmRef = useRef<THREE.Mesh>(null) as MeshRefType;
-  const rightArmRef = useRef<THREE.Mesh>(null) as MeshRefType;
-  const laptopRef = useRef<THREE.Mesh>(null) as MeshRefType;
+  const bodyRef = useRef<THREE.Object3D>(null);
+  const leftLegRef = useRef<THREE.Object3D>(null);
+  const rightLegRef = useRef<THREE.Object3D>(null);
+  const leftArmRef = useRef<THREE.Object3D>(null);
+  const rightArmRef = useRef<THREE.Object3D>(null);
+  const laptopRef = useRef<THREE.Object3D>(null);
   
   // Animation for running
   useFrame(({ clock }) => {
