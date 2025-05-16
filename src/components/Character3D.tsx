@@ -9,6 +9,7 @@ interface Character3DModelProps {
 }
 
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
+  // Use proper typing for the refs with THREE.Mesh
   const bodyRef = useRef<THREE.Mesh>(null);
   const leftLegRef = useRef<THREE.Mesh>(null);
   const rightLegRef = useRef<THREE.Mesh>(null);
@@ -122,6 +123,7 @@ const Character3D: React.FC<Character3DProps> = ({ isRunning }) => {
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <Character3DModel isRunning={isRunning} />
+        <OrbitControls enableZoom={false} />
       </Canvas>
     </div>
   );
