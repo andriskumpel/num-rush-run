@@ -11,12 +11,12 @@ interface Character3DModelProps {
 // Using any to bypass the type checking issues with THREE.js and React types
 // This is safer than forcing type assertions and will allow the component to work properly
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
-  const bodyRef = useRef<THREE.Object3D>(null);
-  const leftLegRef = useRef<THREE.Object3D>(null);
-  const rightLegRef = useRef<THREE.Object3D>(null);
-  const leftArmRef = useRef<THREE.Object3D>(null);
-  const rightArmRef = useRef<THREE.Object3D>(null);
-  const laptopRef = useRef<THREE.Object3D>(null);
+  const bodyRef = useRef<any>(null);
+  const leftLegRef = useRef<any>(null);
+  const rightLegRef = useRef<any>(null);
+  const leftArmRef = useRef<any>(null);
+  const rightArmRef = useRef<any>(null);
+  const laptopRef = useRef<any>(null);
   
   // Animation for running
   useFrame(({ clock }) => {
