@@ -14,7 +14,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
           <span className="text-game-blue">Num</span>
           <span className="text-game-green">Rush</span>
         </h1>
-        <p className="text-xl text-white mb-8">Resuelva problemas matemáticos mientras corre!</p>
+        <p className="text-xl text-white mb-8">Resolva problemas matemáticos enquanto corre!</p>
         
         <div className="space-y-4">
           <div className="bg-white bg-opacity-10 p-6 rounded-lg max-w-md mx-auto">
@@ -26,7 +26,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
               </li>
               <li className="flex items-center">
                 <span className="mr-2 text-game-green">2.</span> 
-                Move para a pista com a resposta correta
+                Mova-se para a pista com a resposta correta
               </li>
               <li className="flex items-center">
                 <span className="mr-2 text-game-green">3.</span> 
