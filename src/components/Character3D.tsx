@@ -8,8 +8,6 @@ interface Character3DModelProps {
   isRunning: boolean;
 }
 
-// Using any to bypass the type checking issues with THREE.js and React types
-// This is safer than forcing type assertions and will allow the component to work properly
 const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
   const bodyRef = useRef<any>(null);
   const leftLegRef = useRef<any>(null);
@@ -93,7 +91,9 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
           <meshStandardMaterial color="#5A3825" /> {/* Match hair color */}
         </mesh>
         
-        {/* Eyes - Larger, expressive eyes */}
+        {/* Enhanced facial features */}
+        
+        {/* Eyes with eyebrows */}
         <mesh position={[0.12, 0.05, 0.35]}>
           <sphereGeometry args={[0.06, 16, 16]} />
           <meshStandardMaterial color="#000000" />
@@ -101,6 +101,38 @@ const Character3DModel: React.FC<Character3DModelProps> = ({ isRunning }) => {
         <mesh position={[-0.12, 0.05, 0.35]}>
           <sphereGeometry args={[0.06, 16, 16]} />
           <meshStandardMaterial color="#000000" />
+        </mesh>
+        
+        {/* Eyebrows */}
+        <mesh position={[0.12, 0.15, 0.38]} rotation={[0, 0, Math.PI/6]}>
+          <boxGeometry args={[0.1, 0.02, 0.01]} />
+          <meshStandardMaterial color="#3A2517" /> {/* Dark brown */}
+        </mesh>
+        <mesh position={[-0.12, 0.15, 0.38]} rotation={[0, 0, -Math.PI/6]}>
+          <boxGeometry args={[0.1, 0.02, 0.01]} />
+          <meshStandardMaterial color="#3A2517" /> {/* Dark brown */}
+        </mesh>
+        
+        {/* Nose */}
+        <mesh position={[0, -0.05, 0.4]}>
+          <coneGeometry args={[0.05, 0.1, 4]} />
+          <meshStandardMaterial color="#FFDEC0" /> {/* Slightly darker than skin */}
+        </mesh>
+        
+        {/* Mouth */}
+        <mesh position={[0, -0.15, 0.35]} rotation={[Math.PI/2, 0, 0]}>
+          <planeGeometry args={[0.1, 0.03]} />
+          <meshStandardMaterial color="#A55050" side={THREE.DoubleSide} />
+        </mesh>
+        
+        {/* Ears */}
+        <mesh position={[0.4, 0, 0]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#FFE4C8" /> {/* Match skin tone */}
+        </mesh>
+        <mesh position={[-0.4, 0, 0]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#FFE4C8" /> {/* Match skin tone */}
         </mesh>
         
         {/* Glasses - Student classic */}
