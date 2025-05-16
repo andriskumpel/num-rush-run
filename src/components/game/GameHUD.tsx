@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Coin } from 'lucide-react';
+import { Coins } from 'lucide-react';
 
 interface GameHUDProps {
   score: number;
@@ -13,7 +13,7 @@ const GameHUD: React.FC<GameHUDProps> = ({ score, combo, lives }) => {
     <div className="absolute top-0 left-0 right-0 flex justify-between p-4 z-40">
       <div className="text-white pixel-border bg-black bg-opacity-70 p-2">
         <div className="flex items-center">
-          <Coin className="w-5 h-5 mr-1 text-yellow-300" />
+          <Coins className="w-5 h-5 mr-1 text-yellow-300" />
           <span className="text-lg pixel-text">{score}</span>
         </div>
         <div className="text-sm pixel-text">Combo: <span className="font-bold text-yellow-300">{combo}x</span></div>
